@@ -32,7 +32,7 @@ public class PriceComparatorTest {
 		driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
 		JavascriptExecutor js=(JavascriptExecutor)driver;
 		Actions a=new Actions(driver);
-		String travelDate="2023/08/26";
+		String travelDate="2023/10/26";
 		String monthYear=Calendar.getMonthYear(travelDate);
 		String date=Calendar.getDate(travelDate);
 		
@@ -52,11 +52,14 @@ public class PriceComparatorTest {
 		//calendar date selection-cleartrip
 		while(!driver.findElement(By.xpath("(//div[@class='DayPicker-Month'])[1]//div[@class='DayPicker-Caption']/div")).getText().equalsIgnoreCase(monthYear))
 		{
+			
 			driver.findElement(By.xpath("//div[@class='flex-1 ta-right']//*[name()='svg' and contains(@data-testid,'rightArrow')]")).click();
+			Thread.sleep(1000);
 		} 
 		
 		js.executeScript("window.scrollBy(0,100)");
 		w.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("(//div[@class='DayPicker-Month'])[1]//div[@class='DayPicker-Caption']/div[.='"+monthYear+"']")));
+		Thread.sleep(1000);
 		driver.findElement(By.xpath("(//div[@class='DayPicker-Month'])[1]//div[contains(@class,'DayPicker-Day')]/div[contains(@class,'Day-grid')]/div[text()='"+date+"']")).click();
 		driver.findElement(By.xpath("//span[text()='Search flights']")).click();
 		Thread.sleep(1000);
@@ -75,23 +78,40 @@ public class PriceComparatorTest {
 		Thread.sleep(1000);
 		driver.findElement(By.xpath("(//div[@class='lM769'])[1]")).click();
 		
-		//calendar date selection
+		//calendar date selection-paytm
 		driver.findElement(By.id("departureDate")).click();
-		String s=driver.findElement(By.xpath("(//table[@class='calendar'])[1]//td[@class='calendar__month _18o18']")).getText();
-		while(!driver.findElement(By.xpath("(//table[@class='calendar'])[1]//td[@class='calendar__month _18o18']")).getText().equalsIgnoreCase(monthYear)
-				&& !driver.findElement(By.xpath("(//table[@class='calendar'])[2]//td[@class='calendar__month _18o18']")).getText().equalsIgnoreCase(monthYear))
+		boolean flag =true;
+		int j=1;
+		while(flag)
 			{
+			String st=driver.findElement(By.xpath("(//td[@class='calendar__month _18o18'])["+j+"]")).getText();
+			if(driver.findElement(By.xpath("(//td[@class='calendar__month _18o18'])["+j+"]")).getText().equalsIgnoreCase(monthYear))
+			{
+				driver.findElement(By.xpath("(//table[@class='calendar'])["+j+"]//div[@class='calendar__day']/div[.='"+date+"']")).click();
+				flag=false;
+				
+				
+				
+			}
+			
+			else if(driver.findElement(By.xpath("(//td[@class='calendar__month _18o18'])["+(j+1)+"]")).getText().equalsIgnoreCase(monthYear)) {
+				
+				String st2= driver.findElement(By.xpath("(//td[@class='calendar__month _18o18'])["+(j+1)+"]")).getText();
+				driver.findElement(By.xpath("(//table[@class='calendar'])["+(j+1)+"]//div[@class='calendar__day']/div[.='"+date+"']")).click();
+				flag=false;
+				
+			}
+			
+			else  {
 			   driver.findElement(By.xpath("//div[@class='_5wV4O']//i[@class='gA7KZ _3nECU']")).click();
-			   Thread.sleep(2000);
+			   flag=true;
+			   j=j+2;
+			}
 			} 
+		
 		//w.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("(//div[@class='DayPicker-Month'])[1]//div[@class='DayPicker-Caption']/div[.='"+monthYear+"']")));
-		if(driver.findElement(By.xpath("(//table[@class='calendar'])[1]//td[@class='calendar__month _18o18']")).getText().equalsIgnoreCase(monthYear))
-		{
-			driver.findElement(By.xpath("(//table[@class='calendar'])[1]//div[@class='calendar__day']/div[.='"+date+"']")).click();
-
-		}
-		else
-			driver.findElement(By.xpath("(//table[@class='calendar'])[2]//div[@class='calendar__day']/div[.='"+date+"']")).click();
+		
+		
 		driver.findElement(By.id("flightSearch")).click();
 		Thread.sleep(4000);
 		w.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("(//span[.='Filters'])[1]")));
@@ -122,6 +142,7 @@ public class PriceComparatorTest {
 			
 			CsvData.data(flightOp,flightNum,ClearTripPrice,paytmPrice);
 			}
+			
 		
 	}
 
