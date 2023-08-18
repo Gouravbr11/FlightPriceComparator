@@ -2,12 +2,12 @@
 <testng-results skipped="0" failed="0" ignored="0" total="1" passed="1">
   <reporter-output>
   </reporter-output>
-  <suite name="Default suite" duration-ms="112568" started-at="2023-08-14T18:37:09Z" finished-at="2023-08-14T18:39:02Z">
+  <suite name="Default suite" duration-ms="140746" started-at="2023-08-18T14:40:57Z" finished-at="2023-08-18T14:43:18Z">
     <groups>
     </groups>
-    <test name="Default test" duration-ms="112568" started-at="2023-08-14T18:37:09Z" finished-at="2023-08-14T18:39:02Z">
+    <test name="Default test" duration-ms="140746" started-at="2023-08-18T14:40:57Z" finished-at="2023-08-18T14:43:18Z">
       <class name="FlightPriceCompare.FlightPriceCompare.PriceComparatorTest">
-        <test-method status="PASS" signature="comparePrice()[pri:0, instance:FlightPriceCompare.FlightPriceCompare.PriceComparatorTest@e056f20]" name="comparePrice" duration-ms="112548" started-at="2023-08-14T18:37:09Z" finished-at="2023-08-14T18:39:02Z">
+        <test-method status="PASS" signature="comparePrice()[pri:0, instance:FlightPriceCompare.FlightPriceCompare.PriceComparatorTest@e056f20]" name="comparePrice" duration-ms="140694" started-at="2023-08-18T14:40:57Z" finished-at="2023-08-18T14:43:18Z">
           <reporter-output>
           </reporter-output>
         </test-method> <!-- comparePrice -->

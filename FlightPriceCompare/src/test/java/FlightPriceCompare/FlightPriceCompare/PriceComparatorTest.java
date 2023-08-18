@@ -21,7 +21,7 @@ import org.testng.annotations.Test;
 import io.github.bonigarcia.wdm.WebDriverManager;
 
 public class PriceComparatorTest {
-	
+
 	@Test
 	public void comparePrice() throws InterruptedException, IOException {
 		
@@ -32,7 +32,7 @@ public class PriceComparatorTest {
 		driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
 		JavascriptExecutor js=(JavascriptExecutor)driver;
 		Actions a=new Actions(driver);
-		String travelDate="2023/10/26";
+		String travelDate="2023/08/26";
 		String monthYear=Calendar.getMonthYear(travelDate);
 		String date=Calendar.getDate(travelDate);
 		
@@ -66,7 +66,7 @@ public class PriceComparatorTest {
 		driver.findElement(By.xpath("//p[text()='Non-stop']")).click();//selecting only non stop flights
 		Thread.sleep(2000);
 		//sorting in descending order-cleartrip
-		String sortingOrder="Desc";
+		String sortingOrder="Asc";
 		if(driver.findElement(By.cssSelector("svg[style='transform: rotate(-180deg);']")).getAttribute("style").equals("transform: rotate(-180deg);"))
 		{
 			if(sortingOrder.equals("Desc"))
@@ -128,6 +128,7 @@ public class PriceComparatorTest {
 		w.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("(//span[.='Filters'])[1]")));
 		js.executeScript("window.scrollBy(0,300)");
 		driver.findElement(By.xpath("(//i[@class='ar-xN'])[1]")).click();//selecting only non stop flights
+		js.executeScript("window.scrollBy(0,300)");
 		
 		//sorting in descending order-paytm
 		if(driver.findElement(By.cssSelector("img[src*='flights/assets/9642bc79.svg']")).getAttribute("class").equals("A51rx"))
@@ -152,20 +153,33 @@ public class PriceComparatorTest {
 			
 			//Paytm flight price retrival
 			String paytmPrice= driver.findElement(By.xpath("(//section[@id='flightsList']//div[@class='_2MkSl'])["+i+"]")).getText();
+			driver.findElement(By.xpath("(//span[.='Flight Details'])["+i+"]")).click();
+			Thread.sleep(2000);
+			String flightOp=driver.findElement(By.xpath("//div[@class='_3tMEB']//span[1]")).getText();
+			String flightNum=driver.findElement(By.xpath("//div[@class='_3tMEB']//span[2]")).getText();
+			driver.findElement(By.xpath("//span[.='Hide Details']")).click();
+
+		
 			//cleartrip flight data retrival
 			driver.switchTo().window(clearTripWin);
 			Thread.sleep(2000);
 			js.executeScript("window.scrollBy(0,200)");
-			String flightOp=flightList.findElement(By.xpath("(//div[@data-testid='airlineBlock']//div/p[@class='fw-500 fs-2 c-neutral-900'])["+i+"]")).getText();
-			String flightNum=flightList.findElement(By.xpath("(//div[@data-testid='airlineBlock']//div/p[@class='fs-1 c-neutral-400 pt-1'])["+i+"]")).getText();
+			if(flightList.findElement(By.xpath("(//div[@data-testid='airlineBlock']//div/p[@class='fw-500 fs-2 c-neutral-900'])["+i+"]")).getText().equals(flightOp)) 
+			{
 			String ClearTripPrice=flightList.findElement(By.xpath("(//div[@data-testid='airlineBlock']//div/p[@class='m-0 fs-5 fw-700 c-neutral-900 false'])["+i+"]")).getText();
 			driver.switchTo().window(paytmWin);
 			Thread.sleep(2000);
-			js.executeScript("window.scrollBy(0,200)");
+			
 
-			
-			
 			CsvData.data(flightOp,flightNum,ClearTripPrice,paytmPrice);
+			}
+			else
+			{
+				driver.switchTo().window(paytmWin);
+				CsvData.data(flightOp,flightNum,"Flight not Available ",paytmPrice);
+
+			}
+			
 			}
 			
 		
