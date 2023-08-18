@@ -46,7 +46,7 @@ public class PriceComparatorTest {
 		driver.findElement(By.cssSelector("input[placeholder='Where to?']")).sendKeys("del");
 		Thread.sleep(1000);
 		driver.findElement(By.xpath("//*[@class='dropdown p-absolute t-13 ln-1 w-100p']/ul[@class='airportList'][1]")).click();
-		Thread.sleep(4000);
+		Thread.sleep(2000);
 		driver.findElement(By.cssSelector("[class='flex flex-middle p-relative homeCalender'] button[class*='flex flex-middle']:first-child")).click();
 		
 		//calendar date selection-cleartrip
@@ -61,9 +61,20 @@ public class PriceComparatorTest {
 		w.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("(//div[@class='DayPicker-Month'])[1]//div[@class='DayPicker-Caption']/div[.='"+monthYear+"']")));
 		Thread.sleep(1000);
 		driver.findElement(By.xpath("(//div[@class='DayPicker-Month'])[1]//div[contains(@class,'DayPicker-Day')]/div[contains(@class,'Day-grid')]/div[text()='"+date+"']")).click();
-		driver.findElement(By.xpath("//span[text()='Search flights']")).click();
+		driver.findElement(By.xpath("//span[text()='Search flights']")).click();//click on search flight button
 		Thread.sleep(1000);
-		driver.findElement(By.xpath("//p[text()='Non-stop']")).click();
+		driver.findElement(By.xpath("//p[text()='Non-stop']")).click();//selecting only non stop flights
+		Thread.sleep(2000);
+		//sorting in descending order-cleartrip
+		String sortingOrder="Desc";
+		if(driver.findElement(By.cssSelector("svg[style='transform: rotate(-180deg);']")).getAttribute("style").equals("transform: rotate(-180deg);"))
+		{
+			if(sortingOrder.equals("Desc"))
+				 driver.findElement(By.cssSelector(".fs-inherit.c-inherit.mr-1.fw-500")).click();
+	
+			else
+				System.out.println("Ascending order");
+		}
 		
 		WebElement flightList=driver.findElement(By.xpath("//div[@data-testid='airlineBlock']"));
 		int size=driver.findElements(By.xpath("//div[@data-testid='airlineBlock']")).size();
@@ -112,11 +123,21 @@ public class PriceComparatorTest {
 		//w.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("(//div[@class='DayPicker-Month'])[1]//div[@class='DayPicker-Caption']/div[.='"+monthYear+"']")));
 		
 		
-		driver.findElement(By.id("flightSearch")).click();
+		driver.findElement(By.id("flightSearch")).click();//click on search flight button
 		Thread.sleep(4000);
 		w.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("(//span[.='Filters'])[1]")));
 		js.executeScript("window.scrollBy(0,300)");
-		driver.findElement(By.xpath("(//i[@class='ar-xN'])[1]")).click();
+		driver.findElement(By.xpath("(//i[@class='ar-xN'])[1]")).click();//selecting only non stop flights
+		
+		//sorting in descending order-paytm
+		if(driver.findElement(By.cssSelector("img[src*='flights/assets/9642bc79.svg']")).getAttribute("class").equals("A51rx"))
+		{
+			if(sortingOrder.equals("Desc"))
+				 driver.findElement(By.cssSelector("img[src*='flights/assets/9642bc79.svg']")).click();
+			
+			else
+				System.out.println("Ascending order");
+		}
 			
 		
 		
@@ -126,7 +147,7 @@ public class PriceComparatorTest {
 			Iterator<String> it=windows.iterator();
 			String clearTripWin=it.next();
 			String paytmWin=it.next();
-			for(int i=1;i<=size;i++) 
+			for(int i=1;i<=10;i++) 
 			{
 			
 			//Paytm flight price retrival
@@ -134,11 +155,15 @@ public class PriceComparatorTest {
 			//cleartrip flight data retrival
 			driver.switchTo().window(clearTripWin);
 			Thread.sleep(2000);
+			js.executeScript("window.scrollBy(0,200)");
 			String flightOp=flightList.findElement(By.xpath("(//div[@data-testid='airlineBlock']//div/p[@class='fw-500 fs-2 c-neutral-900'])["+i+"]")).getText();
 			String flightNum=flightList.findElement(By.xpath("(//div[@data-testid='airlineBlock']//div/p[@class='fs-1 c-neutral-400 pt-1'])["+i+"]")).getText();
 			String ClearTripPrice=flightList.findElement(By.xpath("(//div[@data-testid='airlineBlock']//div/p[@class='m-0 fs-5 fw-700 c-neutral-900 false'])["+i+"]")).getText();
 			driver.switchTo().window(paytmWin);
 			Thread.sleep(2000);
+			js.executeScript("window.scrollBy(0,200)");
+
+			
 			
 			CsvData.data(flightOp,flightNum,ClearTripPrice,paytmPrice);
 			}
